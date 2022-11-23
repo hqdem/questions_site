@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Вопросы пользователя {{username}}{% endblock %}
+
+{% block content %}
+<h1>Вопросы пользователя: {{username}}</h1>
+
+{% include 'inc/_questions_list.html' %}
+
+{% if is_paginated %}
+<div class="mt-3">
+{% include 'inc/_pag.html'%}
+{% endif %}
+</div>
+
+{% endblock %}

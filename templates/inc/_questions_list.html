@@ -1,0 +1,22 @@
+{% for question in questions %}
+
+    <div class="card text-bg-success mb-3">
+        <h5 class="card-header">Автор - {{question.author}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">{{question.title}}</h5>
+            <p class="card-text">{{question.content|truncatewords:50}}</p>
+            <p class="card-text">
+                Теги:
+                {% for tag in question.tags.all %}
+                    <a class="btn btn-outline-warning" href="{% url 'questions_by_tag' tag.name %}"><span>{{tag.name}}</span></a>
+                {% endfor %}
+            </p>
+            <p class="card-text">
+                {{question.created_at|date:"Y M d D h:m"}}
+            </p>
+            <a href="{% url 'question_detail' question.slug %}" class="btn btn-warning">К вопросу</a>
+        </div>
+    </div>
+
+
+{% endfor %}

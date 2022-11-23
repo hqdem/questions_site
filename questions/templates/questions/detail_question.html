@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Вопрос: {{question.title}}{% endblock %}
+
+
+{% block content %}
+
+<div class="card text-bg-success mb-3">
+  <h5 class="card-header">Автор - {{question.author}}</h5>
+  <div class="card-body">
+      <h5 class="card-title">{{question.title}}</h5>
+      <p>Теги
+        {% for tag in question.tags.all %}
+           <a class="btn btn-outline-warning" href="{% url 'questions_by_tag' tag.name %}"><span>{{tag.name}}</span></a>
+        {% endfor %}
+        </p>
+      <p class="card-text">{{question.content}}</p>
+      <p class="cart-text">
+        <form action="{% url 'like_or_dislike_to_question' question.slug 1 %}" method="post">
+          {% csrf_token %}
+          {% with ql=question.likes.all %}
+          {% if request.user in ql %}
+              <button class="btn btn-warning" type="submit">Лайк ({{ql.count}})</button>
+          {% else %}
+              <button class="btn btn-outline-warning" type="submit">Лайк ({{ql.count}})</button>
+          {% endif %}
+          {% endwith %}
+      </form>
+      <form action="{% url 'like_or_dislike_to_question' question.slug 2 %}" method="post">
+          {% csrf_token %}
+          {% with qdl=question.dislikes.all %}
+          {% if request.user in qdl %}
+              <button class="btn btn-warning" type="submit">Дизлайк ({{qdl.count}})</button>
+          {% else %}
+              <button class="btn btn-outline-warning" type="submit">Дизлайк ({{qdl.count}})</button>
+          {% endif %}
+          {% endwith %}
+      </form>
+      </p>
+      <p class="card-text">
+          {{question.created_at|date:"Y M d D h:m"}}
+      </p>
+  </div>
+</div>
+
+<h1>Ответы:</h1>
+<hr>
+
+
+  {% for comment in comments %}
+
+  {% if comment.is_solution %}
+  <div class="card text-bg-success mb-3">
+    <h5 class="card-header">Автор - {{comment.author.username}} (решение)</h5>
+    <div class="card-body">
+      <!-- <h5 class="card-title">Special title treatment</h5> -->
+      <p class="card-text">{{comment.content}}</p>
+      <p class="card-text">{{ comment.created_at }}</p>
+      <p class="card-text">
+        <form action="{% url 'like_or_dislike_to_comment' comment.pk 1 %}" method="post">
+          {% csrf_token %}
+          {% with cl=comment.likes.all %}
+          {% if request.user in cl %}
+              <button class="btn btn-info" type="submit">Лайк ({{cl.count}})</button>
+          {% else %}
+              <button class="btn btn-outline-info" type="submit">Лайк ({{cl.count}})</button>
+          {% endif %}
+          {% endwith %}
+      </form>
+      <form action="{% url 'like_or_dislike_to_comment' comment.pk 2 %}" method="post">
+          {% csrf_token %}
+          {% with cdl=comment.dislikes.all %}
+          {% if request.user in cdl %}
+              <button class="btn btn-info" type="submit">Дизлайк ({{cdl.count}})</button>
+          {% else %}
+              <button class="btn btn-outline-info" type="submit">Дизлайк ({{cdl.count}})</button>
+          {% endif %}
+          {% endwith %}
+      </form>
+      {% if request.user == question.author %}
+        {% if not comment.is_solution %}
+        <form action="{% url 'set_solution_to_comment' comment.pk 1 %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-success">Отметить как решение</button>
+        </form>
+        {% else %}
+          <form action="{% url 'set_solution_to_comment' comment.pk 0 %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">Отменить решение</button>
+          </form>
+        {% endif %}
+      {% endif %}
+      </p>      
+    </div>
+  </div>
+
+  {% else %}
+  <div class="card text-bg-secondary mb-3">
+    <h5 class="card-header">Автор - {{comment.author.username}}</h5>
+    <div class="card-body">
+      <!-- <h5 class="card-title">Special title treatment</h5> -->
+      <p class="card-text">{{comment.content}}</p>
+      <p class="card-text">{{ comment.created_at }}</p>
+      <p class="card-text">
+        <form action="{% url 'like_or_dislike_to_comment' comment.pk 1 %}" method="post">
+          {% csrf_token %}
+          {% with cl=comment.likes.all %}
+          {% if request.user in cl %}
+              <button class="btn btn-info" type="submit">Лайк ({{cl.count}})</button>
+          {% else %}
+              <button class="btn btn-outline-info" type="submit">Лайк ({{cl.count}})</button>
+          {% endif %}
+          {% endwith %}
+      </form>
+      <form action="{% url 'like_or_dislike_to_comment' comment.pk 2 %}" method="post">
+          {% csrf_token %}
+          {% with cdl=comment.dislikes.all %}
+          {% if request.user in cdl %}
+              <button class="btn btn-info" type="submit">Дизлайк ({{cdl.count}})</button>
+          {% else %}
+              <button class="btn btn-outline-info" type="submit">Дизлайк ({{cdl.count}})</button>
+          {% endif %}
+          {% endwith %}
+      </form>
+      {% if request.user == question.author %}
+        {% if not comment.is_solution %}
+        <form action="{% url 'set_solution_to_comment' comment.pk 1 %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-success">Отметить как решение</button>
+        </form>
+        {% else %}
+          <form action="{% url 'set_solution_to_comment' comment.pk 0 %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">Отменить решение</button>
+          </form>
+        {% endif %}
+      {% endif %}
+      </p>      
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+  <h3>Добавить комментарий</h3>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-warning" type="submit">Подтвердить</button>
+  </form>
+
+  <a class="btn btn-danger mt-2" href="{{request.session.prev_url}}">Назад</a>
+{% endblock %}

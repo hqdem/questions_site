@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профиль: {{user.username}}{% endblock %}
+
+{% block content %}
+<span>Профиль пользователя {{ user.username }}</span>
+{% if user.profile_picture %}
+<span><img class="pfp" src="{{ user.profile_picture.url }}" alt="" width="150px" height="150px"></span>
+{% else %}
+<span><img src="{% static 'img/default_pfp.jpg' %}" alt="" width="150px" height="150px"></span>
+{% endif %}
+{% if user.first_name %}
+<p>Фамилия - {{user.last_name}} </p>
+<p>Имя - {{user.first_name}}</p>
+{% endif %}
+
+
+<a class="btn btn-success" href="{% url 'questions_by_user' request.user.username %}">Вопросы {{user.username}}</a>
+<a class="btn btn-warning" href="{% url 'change_user_info' %}">Изменить информацию о профиле</a>
+
+{% endblock %}

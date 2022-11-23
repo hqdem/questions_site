@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Вопросы по тегу: {{tag}}{% endblock %}
+
+{% block content %}
+<h1>Все вопросы по тегу: {{tag}}</h1>
+    {% for question in questions %}
+    <div class="card text-bg-success mb-3">
+        <h5 class="card-header">Автор - {{question.author}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">{{question.title}}</h5>
+            <p class="card-text">{{question.content|truncatewords:50}}</p>
+            <p class="card-text">
+                Теги:
+                {% for now_tag in question.tags.all %}
+                    {% if now_tag.name == tag %}
+                    <a class="btn btn-warning disabled" href="{% url 'questions_by_tag' now_tag.name %}"><span>{{now_tag.name}}</span></a>
+                    {% else %}
+                    <a class="btn btn-outline-warning" href="{% url 'questions_by_tag' now_tag.name %}"><span>{{now_tag.name}}</span></a>
+                    {% endif %}
+                {% endfor %}
+            </p>
+            <p class="card-text">
+                {{question.created_at|date:"Y M d D h:m"}}
+            </p>
+            <a href="{% url 'question_detail' question.slug %}" class="btn btn-warning">К вопросу</a>
+        </div>
+    </div>
+{% endfor %}
+
+{% if is_paginated %}
+<div class="mt-3">
+{% include 'inc/_pag.html'%}
+{% endif %}
+</div>
+
+
+{% endblock %}

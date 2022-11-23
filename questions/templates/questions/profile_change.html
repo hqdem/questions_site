@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Пользователь: {{user.username}}{% endblock %}
+
+{% block content %}
+<h1>Пользователь: {{ user.username }}</h1>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-warning" type="submit">Подтвердить</button>
+    <a href="{% url 'profile' %}" class="btn btn-danger">Вернуться</a>
+</form>
+{% endblock %}
