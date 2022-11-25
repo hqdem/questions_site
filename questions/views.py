@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.defaultfilters import slugify
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, TemplateView
 
@@ -101,7 +102,7 @@ def question_creation(request):
             inst.save()
             print(tags)
             for tag in tags:
-                now_tag, created = Tag.objects.get_or_create(name=tag)
+                now_tag, created = Tag.objects.get_or_create(name=tag, slug=slugify(tag))
                 inst.tags.add(now_tag)
             return redirect('home')
     else:

@@ -8,13 +8,13 @@
             <p class="card-text">
                 Теги:
                 {% for tag in question.tags.all %}
-                    <a class="btn btn-outline-warning" href="{% url 'questions_by_tag' tag.name %}"><span>{{tag.name}}</span></a>
+                    <a class="btn btn-outline-warning" href="{{tag.get_absolute_url}}"><span>{{tag.name}}</span></a>
                 {% endfor %}
             </p>
             <p class="card-text">
                 {{question.created_at|date:"Y M d D h:m"}}
             </p>
-            <a href="{% url 'question_detail' question.slug %}" class="btn btn-warning">К вопросу</a>
+            <a href="{{question.get_absolute_url}}" class="btn btn-warning">К вопросу</a>
         </div>
     </div>
 

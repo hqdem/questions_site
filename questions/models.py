@@ -1,3 +1,4 @@
+from django.urls import reverse_lazy
 from unidecode import unidecode
 
 from django.contrib.auth import get_user_model
@@ -30,6 +31,9 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse_lazy('question_detail', args=[self.slug])
+
 
 class Comment(models.Model):
     content = models.TextField(verbose_name='Содержание')
@@ -47,6 +51,10 @@ class Comment(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=255, verbose_name='Тэг')
+    slug = models.SlugField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse_lazy('questions_by_tag', args=[self.slug])

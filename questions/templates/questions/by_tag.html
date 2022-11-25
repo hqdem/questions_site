@@ -14,16 +14,16 @@
                 Теги:
                 {% for now_tag in question.tags.all %}
                     {% if now_tag.name == tag %}
-                    <a class="btn btn-warning disabled" href="{% url 'questions_by_tag' now_tag.name %}"><span>{{now_tag.name}}</span></a>
+                    <a class="btn btn-warning disabled" href="{{now_tag.get_absolute_url}}"><span>{{now_tag.name}}</span></a>
                     {% else %}
-                    <a class="btn btn-outline-warning" href="{% url 'questions_by_tag' now_tag.name %}"><span>{{now_tag.name}}</span></a>
+                    <a class="btn btn-outline-warning" href="{{now_tag.get_absolute_url}}"><span>{{now_tag.name}}</span></a>
                     {% endif %}
                 {% endfor %}
             </p>
             <p class="card-text">
                 {{question.created_at|date:"Y M d D h:m"}}
             </p>
-            <a href="{% url 'question_detail' question.slug %}" class="btn btn-warning">К вопросу</a>
+            <a href="{{question.get_absolute_url}}" class="btn btn-warning">К вопросу</a>
         </div>
     </div>
 {% endfor %}

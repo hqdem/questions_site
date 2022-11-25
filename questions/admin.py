@@ -9,7 +9,12 @@ class QuestionAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'modified_at')
 
 
+class TagAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ['name']}
+    fields = ['name', 'slug']
+
+
 admin.site.register(MyUser)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Comment)
-admin.site.register(Tag)
+admin.site.register(Tag, TagAdmin)
